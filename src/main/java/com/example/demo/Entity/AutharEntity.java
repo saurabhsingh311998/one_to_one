@@ -15,6 +15,7 @@ public class AutharEntity {
     private int pin;
 
     // Correct the reference to BookEntity
+    // test
     @OneToOne
     @JoinColumn(name = "authar_book")
     private BookEntity book;
