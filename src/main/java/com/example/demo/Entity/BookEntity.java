@@ -14,6 +14,6 @@ public class BookEntity {
     private int part;
 
     // Correct the mappedBy field to reference the correct variable name in AutharEntity
-    @OneToOne(mappedBy = "book")
+    @OneToOne(mappedBy = "book",cascade = CascadeType.ALL)
     private AutharEntity authar;
 }
