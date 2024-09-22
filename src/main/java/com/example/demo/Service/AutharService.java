@@ -12,6 +12,9 @@ import java.util.Optional;
 public class AutharService {
     @Autowired
     AutharRepository autharRepository;
+    public boolean existsById(int id) {
+        return autharRepository.existsById(id);
+    }
     public AutharEntity saveData(AutharEntity autharEntity)
     {
         return autharRepository.save(autharEntity);
