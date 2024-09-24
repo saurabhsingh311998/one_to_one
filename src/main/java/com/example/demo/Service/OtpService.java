@@ -14,22 +14,11 @@ public class OtpService {
     @Autowired
     OtpRepository otpRepository;
     @Autowired
-    Impl impl;
+    private Impl impl;
 
     // Method to generate and save OTP
     public String generateOtp(String email, String phone) {
-        Random random = new Random();
-        String otp = String.format("%04d", random.nextInt(10000)); // Generate 4 digit OTP
-
-        OtpEntity otpEntity = new OtpEntity();
-        otpEntity.setEmail(email);
-        otpEntity.setPhone(phone);
-        otpEntity.setOtp(otp);
-        otpRepository.save(otpEntity);
-
-        // Send OTP via email
-        impl.sendOtpEmail(email, otp);
-        return otp;
+        return impl.generateOtp(email, phone); // Call the generateOtp method in Impl
     }
 
     // Method to verify OTP

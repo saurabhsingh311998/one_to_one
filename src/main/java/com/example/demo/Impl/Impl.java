@@ -9,10 +9,11 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.Random;
 @Service
 public class Impl {
     private static final SecureRandom random = new SecureRandom();
-    private static final int OTP_LENGTH = 6;
+    private static final int OTP_LENGTH = 4;
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -23,36 +24,23 @@ public class Impl {
 //    @Autowired
 //    private TwilioServic twilioService; // For sending SMS
 
-    // Method to generate OTP
-//    public String generateOtp(String email, String phone) {
-//        String otp = generateOTP();
-//
-//        OtpEntity otpEntity = new OtpEntity();
-//        otpEntity.setEmail(email);
-//        otpEntity.setPhone(phone);
-//        otpEntity.setOtp(otp);
-//        otpRepository.save(otpEntity);
-//
-//        // Send OTP via email
-//        sendOtpEmail(email, otp);
-//        // Send OTP via SMS
-//        sendOtpSms(phone, otp);
-//
-//        return otp;
-//    }
 
     // Method to generate OTP and send it via email
-    public String generateOtp(String email) {
+    public String generateOtp(String email, String phone) {
         String otp = generateOTP();
 
-        // Save OTP to database (assuming OtpEntity has email and otp fields)
+        // Save OTP to database (assuming OtpEntity has email, phone, and otp fields)
         OtpEntity otpEntity = new OtpEntity();
         otpEntity.setEmail(email);
+        otpEntity.setPhone(phone); // Assuming you still want to store phone
         otpEntity.setOtp(otp);
         otpRepository.save(otpEntity);
 
         // Send OTP via email
-        sendOtpEmail(email, otp);
+//        sendOtpEmail(email, otp);
+
+        // If you're still planning to send OTP via SMS, uncomment this
+        // sendOtpSms(phone, otp);
 
         return otp;
     }
