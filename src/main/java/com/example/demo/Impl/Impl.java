@@ -22,7 +22,7 @@ public class Impl {
     private OtpRepository otpRepository;
 
 //    @Autowired
-//    private TwilioServic twilioService; // For sending SMS
+//    private TwilioService twilioService; // For sending SMS
 
 
     // Method to generate OTP and send it via email
@@ -53,14 +53,6 @@ public class Impl {
         return otp.toString();
     }
 
-//    private void sendOtpEmail(String email, String otp) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(email);
-//        message.setSubject("Your OTP Code");
-//        message.setText("Your OTP code is: " + otp);
-//        mailSender.send(message);
-//    }
-//
 //    private void sendOtpSms(String phone, String otp) {
 //        twilioService.sendSms(phone, "Your OTP code is: " + otp);
 //    }
@@ -70,7 +62,6 @@ public class Impl {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Your OTP Code");
-//        message.setText("Your OTP code is: " + otp);
         message.setText("Dear User,\n\nPlease use the following 4-digit OTP for my account verification: " + otp + ". Kindly ensure that this information remains confidential.\n\nThank you!\n\nBest,\nSaurabh Singh");
         message.setFrom("saurabhsingh03011998@gmail.com"); // Update this to your verified email
 
