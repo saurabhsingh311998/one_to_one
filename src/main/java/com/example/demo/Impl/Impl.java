@@ -37,7 +37,7 @@ public class Impl {
         otpRepository.save(otpEntity);
 
         // Send OTP via email
-//        sendOtpEmail(email, otp);
+        sendOtpEmail(email, otp);
 
         // If you're still planning to send OTP via SMS, uncomment this
         // sendOtpSms(phone, otp);
@@ -70,7 +70,8 @@ public class Impl {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Your OTP Code");
-        message.setText("Your OTP code is: " + otp);
+//        message.setText("Your OTP code is: " + otp);
+        message.setText("Dear User,\n\nPlease use the following 4-digit OTP for my account verification: " + otp + ". Kindly ensure that this information remains confidential.\n\nThank you!\n\nBest,\nSaurabh Singh");
         message.setFrom("saurabhsingh03011998@gmail.com"); // Update this to your verified email
 
         javaMailSender.send(message);

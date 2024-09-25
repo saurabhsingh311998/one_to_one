@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,7 +19,7 @@ public class OtpController {
     public ResponseEntity<String> generateOtp(@RequestBody Impl.GenerateOtpRequest request) {
         try{
             String otp = otpService.generateOtp(request.getEmail(), request.getPhone());
-            return new ResponseEntity<>(false, HttpStatus.OK.value(), "OTP generated successfully: " + otp);
+            return new ResponseEntity<>(false, HttpStatus.OK.value(), "OTP generated successfully");
         }catch (Exception ex){
             return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
         }
