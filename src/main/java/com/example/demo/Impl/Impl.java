@@ -22,7 +22,6 @@ public class Impl {
     @Autowired
     JavaMailSender javaMailSender;
 
-
     // Method to generate OTP and send it via email
     public String generateOtp(String email, String phone) {
         String otp = generateOTP(); // Call a method to generate the OTP
@@ -64,7 +63,6 @@ public class Impl {
             this.expirationTime = expirationTime;
         }
     }
-
 
 //    private void sendOtpSms(String phone, String otp) {
 //        twilioService.sendSms(phone, "Your OTP code is: " + otp);
