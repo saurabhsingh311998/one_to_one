@@ -1,18 +1,11 @@
 package com.example.demo.Service;
-
-import com.example.demo.Entity.OtpEntity;
 import com.example.demo.Impl.Impl;
-import com.example.demo.Repository.OtpRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
-import java.util.Random;
+import java.time.LocalDateTime;
 
 @Service
 public class OtpService {
-    @Autowired
-    OtpRepository otpRepository;
     @Autowired
     private Impl impl;
 
@@ -23,7 +16,13 @@ public class OtpService {
 
     // Method to verify OTP
     public boolean verifyOtp(String emailOrPhone, String otp) {
-        Optional<OtpEntity> otpEntity = otpRepository.findByEmailOrPhone(emailOrPhone, emailOrPhone);
-        return otpEntity.isPresent() && otpEntity.get().getOtp().equals(otp);
+        Impl.OtpInfo otpInfo = impl.otpStore.get(emailOrPhone);
+        if (otpInfo != null) {
+            if (otpInfo.getOtp().equals(otp) && LocalDateTime.now().isBefore(otpInfo.getExpirationTime())) {
+                impl.otpStore.remove(emailOrPhone); // OTP is used, remove it
+                return true;
+            }
+        }
+        return false;
     }
 }

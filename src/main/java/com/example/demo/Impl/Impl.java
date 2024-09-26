@@ -1,7 +1,5 @@
 package com.example.demo.Impl;
 
-import com.example.demo.Entity.OtpEntity;
-import com.example.demo.Repository.OtpRepository;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -9,38 +7,36 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.Random;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 @Service
 public class Impl {
+
+    public   Map<String, OtpInfo> otpStore = new HashMap<>(); // In-memory OTP store
     private static final SecureRandom random = new SecureRandom();
     private static final int OTP_LENGTH = 4;
 
     @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Autowired
-    private OtpRepository otpRepository;
-
-//    @Autowired
-//    private TwilioService twilioService; // For sending SMS
+    JavaMailSender javaMailSender;
 
 
     // Method to generate OTP and send it via email
     public String generateOtp(String email, String phone) {
-        String otp = generateOTP();
+        String otp = generateOTP(); // Call a method to generate the OTP
 
-        // Save OTP to database (assuming OtpEntity has email, phone, and otp fields)
-        OtpEntity otpEntity = new OtpEntity();
-        otpEntity.setEmail(email);
-        otpEntity.setPhone(phone); // Assuming you still want to store phone
-        otpEntity.setOtp(otp);
-        otpRepository.save(otpEntity);
+        // Store OTP and its expiration time in the HashMap
+        OtpInfo otpInfo = new OtpInfo(email, phone, otp, LocalDateTime.now().plusMinutes(5)); // OTP valid for 5 minutes
+//        otpStore.put(email != null ? email : phone, otpInfo);
+        Stream.of(email, phone).filter(Objects::nonNull).forEach(key -> otpStore.put(key, otpInfo));
+        if (email != null) {
+            sendOtpEmail(email, otp);
+        }
 
-        // Send OTP via email
-        sendOtpEmail(email, otp);
-
-        // If you're still planning to send OTP via SMS, uncomment this
-        // sendOtpSms(phone, otp);
+        // Simulate sending OTP via SMS
+        // if (phone != null) sendOtpSms(phone, otp);
 
         return otp;
     }
@@ -53,6 +49,23 @@ public class Impl {
         return otp.toString();
     }
 
+    // Helper class to store OTP and expiration time
+    @Data
+    public static class OtpInfo {
+        private String otp;
+        private String email;
+        private String phone;
+        private LocalDateTime expirationTime;
+
+        public OtpInfo(String email, String phone, String otp, LocalDateTime expirationTime) {
+            this.email = email;
+            this.phone = phone;
+            this.otp = otp;
+            this.expirationTime = expirationTime;
+        }
+    }
+
+
 //    private void sendOtpSms(String phone, String otp) {
 //        twilioService.sendSms(phone, "Your OTP code is: " + otp);
 //    }
@@ -62,8 +75,7 @@ public class Impl {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("Your OTP Code");
-//        message.setText("Your OTP code is: " + otp);
-        message.setText("Dear User,\n\nPlease use the following 4-digit OTP for my account verification: " + otp + ". Kindly ensure that this information remains confidential.\n\nThank you!\n\nBest,\nSaurabh Singh");
+        message.setText("Dear User,\n\nPlease use the following 4-digit OTP for my account verification:" + otp + ". Kindly ensure that this information remains confidential, as the OTP will expire in 5 minutes.\n\nThank you!\n\nBest,\nSaurabh Singh");
         message.setFrom("saurabhsingh03011998@gmail.com"); // Update this to your verified email
 
         javaMailSender.send(message);

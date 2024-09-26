@@ -21,9 +21,9 @@ public class AutharController {
     {
         try {
             AutharEntity savedEntity = autharService.saveData(autharEntity);
-            return new ResponseEntity<>(false, HttpStatus.OK.value(), savedEntity);
+            return new ResponseEntity<>(false, HttpStatus.OK.value(), savedEntity,"successfully");
         }catch (Exception ex) {
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null); // Error handling
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null,"Internal server error!"); // Error handling
         }
     }
 
@@ -33,12 +33,12 @@ public class AutharController {
         try {
             Optional<AutharEntity> entity = autharService.findById(id);
             if (entity.isPresent()) {
-                return new ResponseEntity<>(false, HttpStatus.OK.value(), entity); // Wrap in ResponseEntity
+                return new ResponseEntity<>(false, HttpStatus.OK.value(), entity,"successfully"); // Wrap in ResponseEntity
             } else {
-                return new ResponseEntity<>(true, HttpStatus.NOT_FOUND.value(), null); // Wrap in ResponseEntity
+                return new ResponseEntity<>(true, HttpStatus.NOT_FOUND.value(), null,"Not found"); // Wrap in ResponseEntity
             }
         }catch (Exception ex){
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null); // Error handling
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null,"Internal server error!"); // Error handling
         }
     }
 
@@ -47,9 +47,9 @@ public class AutharController {
     {
         try {
             List<AutharEntity> entities = autharService.findAll();
-            return new ResponseEntity<>(false, HttpStatus.OK.value(), entities); // Wrap in ResponseEntity
+            return new ResponseEntity<>(false, HttpStatus.OK.value(), entities,"Successfully"); // Wrap in ResponseEntity
         }catch (Exception ex){
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(),null); // Error handling
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(),null,"Internal server error!"); // Error handling
         }
     }
 
@@ -59,13 +59,13 @@ public class AutharController {
         try {
             boolean exists = autharService.existsById(id);
             if(!exists){
-                return new ResponseEntity<>(true, HttpStatus.NOT_FOUND.value(),null); // Entity not found
+                return new ResponseEntity<>(true, HttpStatus.NOT_FOUND.value(),null,"Entity not found"); // Entity not found
             }else {
                 autharService.deleteById(id);
-                return new ResponseEntity<>(false, HttpStatus.OK.value(), null); // Successfully deleted
+                return new ResponseEntity<>(false, HttpStatus.OK.value(), null,"Successfully deleted"); // Successfully deleted
             }
         }catch (Exception ex){
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null); // Generic error handling
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null,"Internal server error!"); // Generic error handling
         }
     }
 }

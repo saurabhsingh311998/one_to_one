@@ -15,28 +15,29 @@ public class OtpController {
     private OtpService otpService;
 
     // Endpoint to generate OTP
+
     @PostMapping("/generate")
     public ResponseEntity<String> generateOtp(@RequestBody Impl.GenerateOtpRequest request) {
-        try{
+        try {
             String otp = otpService.generateOtp(request.getEmail(), request.getPhone());
-            return new ResponseEntity<>(false, HttpStatus.OK.value(), "OTP generated successfully");
-        }catch (Exception ex){
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+            return new ResponseEntity<>(false, HttpStatus.OK.value(),null, "OTP generated successfully: ");
+        } catch (Exception ex) {
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(),null, "Error generating OTP");
         }
     }
 
     // Endpoint to verify OTP
     @PostMapping("/verify")
     public ResponseEntity<String> verifyOtp(@RequestBody Impl.VerifyOtpRequest request) {
+        boolean isValid = otpService.verifyOtp(request.getEmailOrPhone(), request.getOtp());
         try {
-            boolean isValid = otpService.verifyOtp(request.getEmailOrPhone(), request.getOtp());
             if (isValid) {
-                return new ResponseEntity<>(false, HttpStatus.OK.value(), "OTP verified successfully!");
+                return new ResponseEntity<>(false, HttpStatus.OK.value(),null, "OTP verified successfully!");
             } else {
-                return new ResponseEntity<>(true, 400, "Invalid OTP!");
+                return new ResponseEntity<>(true, HttpStatus.BAD_REQUEST.value(),null, "Invalid or expired OTP!");
             }
         }catch (Exception ex){
-            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null);
+            return new ResponseEntity<>(true, HttpStatus.INTERNAL_SERVER_ERROR.value(), null,"Internal server error!" );
         }
     }
 }
